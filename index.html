@@ -575,10 +575,18 @@ h3{font-size:clamp(25px,5vw,43px);font-weight:500}
       setTimeout(()=>typeInto(document.querySelector("#reveal4a"),"I wish I could be beside you right now… stealing your cake, annoying you, hugging you way too tightly, and watching you smile.",16),1500);
       setTimeout(()=>typeInto(document.querySelector("#reveal4b"),"Since I can't be there physically, I brought a little piece of my heart to Germany.",16),3200);
       setTimeout(()=>document.querySelector("#toStory").classList.remove("hidden"),5000);
+      setTimeout(()=>typeInto(
+      document.querySelector("#reveal4b"),
+      "Since I can't be there physically, I brought a little piece of my heart to Germany.",
+      16
+    ),3200);
+
+    setTimeout(
+      ()=>document.querySelector("#toStory").classList.remove("hidden"),
+      5000);
     }
   }
-
-  // Scene 5 story: one photo at a time, not a gallery.
+  
   let storyIndex=0;
   function renderStory(){
     document.querySelector("#storyImg").src="assets/"+photoFiles[storyIndex];
