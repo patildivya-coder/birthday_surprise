@@ -735,11 +735,15 @@ h3{font-size:clamp(25px,5vw,43px);font-weight:500}
       if(!b.classList.contains("opened")){b.classList.add("opened");opened++;document.querySelector("#flowerCount").textContent=opened}
       document.querySelector("#reasonNumber").textContent=i+1;document.querySelector("#reasonText").textContent=reason;
       document.querySelector("#reasonPop").classList.add("show");burstHearts(7);
-      if(opened===24){
+     if(opened===24){
   setTimeout(()=>{
     document.querySelector("#reasonPop").classList.remove("show");
     document.querySelector("#allFlowers").classList.remove("hidden");
-  },500);
+    document.querySelector("#allFlowers").scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+  },700);
 }
     });field.appendChild(b);
   });
