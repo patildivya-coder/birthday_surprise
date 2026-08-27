@@ -561,7 +561,7 @@ h3{font-size:clamp(25px,5vw,43px);font-weight:500}
     const tick=()=>{el.textContent=text.slice(0,i++);if(i<=text.length)setTimeout(tick,delay)};tick();
   }
   function onScene(n){
-    if(n===3){
+    if(n===2){
       candleDone=false;
       document.querySelector("#candle").classList.remove("out");
       document.querySelector("#flame").style.display="";
@@ -570,7 +570,7 @@ h3{font-size:clamp(25px,5vw,43px);font-weight:500}
       document.querySelector("#micBtn").classList.remove("hidden");
       document.querySelector("#micStatus").classList.remove("hidden");
     }
-    if(n===4){
+    if(n===3){
       typeInto(document.querySelector("#typingTitle"),"Happiest Birthday to my everything,\nmy cute Navru,\nmy cute little baby,\nmy favourite person. ❤️",22);
       setTimeout(()=>typeInto(document.querySelector("#reveal4a"),"I wish I could be beside you right now… stealing your cake, annoying you, hugging you way too tightly, and watching you smile.",16),1500);
       setTimeout(()=>typeInto(document.querySelector("#reveal4b"),"Since I can't be there physically, I brought a little piece of my heart to Germany.",16),3200);
