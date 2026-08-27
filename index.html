@@ -307,6 +307,83 @@ h3{font-size:clamp(25px,5vw,43px);font-weight:500}
     font-size: 220px;
   }
 }
+/* ===== FINAL PAGE MOBILE FIX ===== */
+
+section.scene[data-scene="11"] {
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  padding-top: 70px !important;
+  padding-bottom: 100px !important;
+}
+
+section.scene[data-scene="11"] .content {
+  min-height: auto !important;
+  height: auto !important;
+  padding-bottom: 80px !important;
+}
+
+/* Make the complete heart visible */
+#final-heart {
+  width: 260px !important;
+  height: 260px !important;
+  margin: 30px auto 50px !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  flex-shrink: 0 !important;
+}
+
+#final-heart span {
+  display: block !important;
+  font-size: 230px !important;
+  line-height: 1 !important;
+  transform: none !important;
+  overflow: visible !important;
+}
+
+/* Letter must be completely inside the scrollable final page */
+#finalLetter {
+  width: min(90vw, 650px) !important;
+  margin: 20px auto 60px !important;
+  box-sizing: border-box !important;
+}
+
+#finalLetter.show {
+  display: block !important;
+}
+
+#ending {
+  padding-bottom: 80px !important;
+}
+
+@media (max-width: 600px) {
+  section.scene[data-scene="11"] {
+    padding-top: 55px !important;
+    padding-bottom: 100px !important;
+  }
+
+  #final-heart {
+    width: 230px !important;
+    height: 230px !important;
+    margin: 25px auto 45px !important;
+  }
+
+  #final-heart span {
+    font-size: 205px !important;
+  }
+
+  #finalLetter {
+    width: 88vw !important;
+    margin-bottom: 70px !important;
+  }
+}
 </style>
 </head>
 <body>
