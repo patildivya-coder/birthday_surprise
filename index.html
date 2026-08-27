@@ -307,51 +307,93 @@ h3{font-size:clamp(25px,5vw,43px);font-weight:500}
     font-size: 220px;
   }
 }
-/* ===== FINAL PAGE MOBILE FIX ===== */
+/* ===== FINAL PAGE COMPLETE FIX ===== */
 
-section.scene[data-scene="11"] {
-  height: 100dvh !important;
-  min-height: 100dvh !important;
-  max-height: none !important;
-  overflow-y: auto !important;
+.scene[data-scene="11"] {
+  position: absolute !important;
+  inset: 0 !important;
+
+  display: block !important;
+
   overflow-x: hidden !important;
-  -webkit-overflow-scrolling: touch;
-  box-sizing: border-box;
-  padding-top: 70px !important;
-  padding-bottom: 100px !important;
+  overflow-y: auto !important;
+
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+
+  padding: 75px 18px 120px !important;
 }
 
-section.scene[data-scene="11"] .content {
-  min-height: auto !important;
+.scene[data-scene="11"] .content {
+  width: 100% !important;
+  max-width: 900px !important;
+
+  max-height: none !important;
   height: auto !important;
-  padding-bottom: 80px !important;
+
+  overflow: visible !important;
+
+  margin: 0 auto !important;
+  padding: 0 0 100px !important;
 }
 
-/* Make the complete heart visible */
+/* COMPLETE HEART */
 #final-heart {
-  width: 260px !important;
-  height: 260px !important;
-  margin: 30px auto 50px !important;
+  width: 230px !important;
+  height: 230px !important;
+
+  margin: 35px auto 55px !important;
+
   position: relative !important;
+
+  cursor: pointer !important;
+  overflow: visible !important;
+
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  overflow: visible !important;
-  flex-shrink: 0 !important;
+
+  animation: heartBeat 1.5s ease-in-out infinite !important;
+}
+
+/* Use a real heart character so NOTHING gets clipped */
+#final-heart::before,
+#final-heart::after {
+  display: none !important;
 }
 
 #final-heart span {
+  position: relative !important;
   display: block !important;
-  font-size: 230px !important;
-  line-height: 1 !important;
-  transform: none !important;
-  overflow: visible !important;
+
+  padding: 0 !important;
+
+  font-size: 220px !important;
+  line-height: 0.9 !important;
+
+  color: #ff8fb0 !important;
+
+  text-shadow:
+    0 0 15px rgba(255,112,151,.7),
+    0 0 40px rgba(255,112,151,.5),
+    0 0 80px rgba(255,112,151,.3) !important;
 }
 
-/* Letter must be completely inside the scrollable final page */
+/* LETTER */
 #finalLetter {
-  width: min(90vw, 650px) !important;
-  margin: 20px auto 60px !important;
+  width: min(700px, 90vw) !important;
+
+  max-height: none !important;
+  height: auto !important;
+
+  overflow: visible !important;
+
+  display: none !important;
+
+  margin: 20px auto 70px !important;
+
+  padding: 28px 26px !important;
+
   box-sizing: border-box !important;
 }
 
@@ -359,29 +401,44 @@ section.scene[data-scene="11"] .content {
   display: block !important;
 }
 
-#ending {
-  padding-bottom: 80px !important;
+/* Make the whole final page scroll naturally */
+.scene[data-scene="11"] #ending {
+  margin-bottom: 80px !important;
 }
 
+/* MOBILE */
 @media (max-width: 600px) {
-  section.scene[data-scene="11"] {
-    padding-top: 55px !important;
-    padding-bottom: 100px !important;
+
+  .scene[data-scene="11"] {
+    padding: 65px 15px 120px !important;
+  }
+
+  .scene[data-scene="11"] .content {
+    padding-bottom: 120px !important;
   }
 
   #final-heart {
-    width: 230px !important;
-    height: 230px !important;
-    margin: 25px auto 45px !important;
+    width: 210px !important;
+    height: 210px !important;
+
+    margin: 30px auto 50px !important;
   }
 
   #final-heart span {
-    font-size: 205px !important;
+    font-size: 200px !important;
   }
 
   #finalLetter {
-    width: 88vw !important;
-    margin-bottom: 70px !important;
+    width: 90vw !important;
+
+    margin: 20px auto 80px !important;
+
+    padding: 25px 22px !important;
+  }
+
+  #finalLetter p {
+    font-size: 17px !important;
+    line-height: 1.7 !important;
   }
 }
 </style>
