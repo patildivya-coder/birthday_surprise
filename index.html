@@ -53,7 +53,15 @@ h3{font-size:clamp(25px,5vw,43px);font-weight:500}
 .cta.primary{background:linear-gradient(135deg,#d96d8d,#9c3d62);border-color:#ffb3c9;box-shadow:0 12px 45px rgba(201,79,120,.28)}
 .cta.small{padding:11px 17px;font-size:14px}
 .hidden{display:none!important}
-
+#allFlowers{
+  position:absolute;
+  left:50%;
+  bottom:10px;
+  transform:translateX(-50%);
+  z-index:60;
+  width:min(90vw,500px);
+  text-align:center;
+}
 #hud{position:fixed;z-index:100;inset:0;pointer-events:none}
 #progress{position:absolute;top:18px;left:50%;transform:translateX(-50%);width:min(240px,42vw);height:2px;background:rgba(255,255,255,.13);border-radius:9px}
 #progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));box-shadow:0 0 12px var(--gold);transition:width .7s ease}
@@ -731,7 +739,7 @@ h3{font-size:clamp(25px,5vw,43px);font-weight:500}
   setTimeout(()=>{
     document.querySelector("#reasonPop").classList.remove("show");
     document.querySelector("#allFlowers").classList.remove("hidden");
-  },700);
+  },500);
 }
     });field.appendChild(b);
   });
