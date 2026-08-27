@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#090711">
+<meta name="description" content="A private birthday universe, made with love.">
+<title>For My Birthday Boy 🌻</title>
+<style>
+:root{
+  --bg:#080611;--bg2:#160b18;--pink:#ff9bb9;--rose:#c85d7e;--gold:#f6d58a;
+  --cream:#fff5ee;--muted:#cbb8c1;--glass:rgba(255,255,255,.065);
+  --line:rgba(255,210,220,.16);--shadow:0 24px 90px rgba(0,0,0,.48);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--cream);
+  font-family:Georgia,"Times New Roman",serif}
+button{font:inherit}
+#app{position:fixed;inset:0;overflow:hidden;background:
+ radial-gradient(circle at 15% 20%,rgba(255,108,153,.13),transparent 28%),
+ radial-gradient(circle at 82% 78%,rgba(246,213,138,.10),transparent 30%),
+ linear-gradient(135deg,#070610 0%,#160a18 52%,#090611 100%)}
+#app:before{content:"";position:absolute;inset:-25%;background:
+ radial-gradient(circle,rgba(255,255,255,.08) 0 1px,transparent 1.5px) 0 0/115px 115px;
+ opacity:.35;animation:starDrift 50s linear infinite;pointer-events:none}
+@keyframes starDrift{to{transform:translate3d(-80px,-140px,0)}}
+
+#scene-layer{position:absolute;inset:0}
+.scene{position:absolute;inset:0;padding:clamp(62px,8vh,88px) clamp(18px,4vw,70px) clamp(38px,6vh,62px);
+ display:grid;place-items:center;opacity:0;visibility:hidden;transform:scale(1.035);
+ transition:opacity .75s ease,transform .95s cubic-bezier(.2,.75,.2,1),visibility 0s linear .75s;
+ overflow:hidden}
+.scene.active{opacity:1;visibility:visible;transform:scale(1);transition-delay:0s}
+.scene.exit{opacity:0;transform:scale(.97)}
+.content{width:min(980px,100%);max-height:calc(100svh - 118px);overflow:hidden;text-align:center;scrollbar-width:none;position:relative;z-index:5}
+.content::-webkit-scrollbar{display:none}.eyebrow{font:700 11px/1.4 Arial,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#cfaeb8;margin-bottom:15px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(44px,10vw,94px);line-height:.98;font-weight:500;letter-spacing:-.035em}
+h2{font-size:clamp(34px,7vw,68px);line-height:1.02;font-weight:500;letter-spacing:-.025em}
+h3{font-size:clamp(25px,5vw,43px);font-weight:500}
+.lead{font-size:clamp(17px,3vw,23px);line-height:1.62;color:#eadde1;max-width:720px;margin:0 auto}
+.script{font-family:"Brush Script MT","Segoe Script",cursive;font-size:clamp(31px,6vw,55px);color:var(--gold)}
+.gold{color:var(--gold)}.pink{color:var(--pink)}
+.muted{color:var(--muted)}
+.stack{display:grid;gap:18px;justify-items:center}
+.glass{background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.025));
+ border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+ box-shadow:var(--shadow)}
+.cta{border:1px solid rgba(246,213,138,.62);border-radius:999px;padding:15px 24px;
+ color:#fff9f2;background:rgba(246,213,138,.08);cursor:pointer;box-shadow:0 0 0 rgba(246,213,138,0);
+ transition:.3s;letter-spacing:.03em}
+.cta:hover,.cta:focus-visible{transform:translateY(-2px);background:rgba(246,213,138,.18);box-shadow:0 10px 45px rgba(246,213,138,.15)}
+.cta.primary{background:linear-gradient(135deg,#d96d8d,#9c3d62);border-color:#ffb3c9;box-shadow:0 12px 45px rgba(201,79,120,.28)}
+.cta.small{padding:11px 17px;font-size:14px}
+.hidden{display:none!important}
+
+#hud{position:fixed;z-index:100;inset:0;pointer-events:none}
+#progress{position:absolute;top:18px;left:50%;transform:translateX(-50%);width:min(240px,42vw);height:2px;background:rgba(255,255,255,.13);border-radius:9px}
+#progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));box-shadow:0 0 12px var(--gold);transition:width .7s ease}
+#musicCtl{position:absolute;right:16px;top:13px;pointer-events:auto;border:1px solid var(--line);border-radius:999px;
+ background:rgba(10,7,17,.52);color:#fff;padding:9px 12px;display:flex;gap:8px;align-items:center;
+ backdrop-filter:blur(14px);cursor:pointer}
+.music-dot{width:7px;height:7px;border-radius:50%;background:#6c6470}
+.music-dot.on{background:var(--gold);box-shadow:0 0 14px var(--gold);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{transform:scale(1.6);opacity:.55}}
+#hint{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);font:11px Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:#96838d;white-space:nowrap}
+
+#ambient,.particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.55;animation:twinkle var(--d) ease-in-out infinite}
+@keyframes twinkle{50%{opacity:.08;transform:scale(.5)}}
+.heart-float,.petal{position:absolute;pointer-events:none;opacity:0;animation:floatUp var(--d) linear forwards}
+.heart-float{font-size:clamp(14px,2vw,22px);color:#ff9db7;text-shadow:0 0 18px #ff6f9c}
+.petal{font-size:20px;filter:drop-shadow(0 0 8px rgba(246,213,138,.4))}
+@keyframes floatUp{0%{transform:translate3d(0,25px,0) rotate(0);opacity:0}12%{opacity:.8}100%{transform:translate3d(var(--x),-110vh,0) rotate(420deg);opacity:0}}
+
+#intro-orb{width:min(260px,52vw);aspect-ratio:1;border-radius:50%;position:relative;
+ background:radial-gradient(circle at 35% 30%,#fff2d0 0 2%,#e99aaa 4%,#9d3d62 28%,transparent 62%);
+ filter:blur(.2px);box-shadow:0 0 55px rgba(237,139,169,.24),inset 0 0 60px rgba(255,255,255,.1);
+ animation:breathe 4s ease-in-out infinite}
+#intro-orb:after{content:"♥";position:absolute;inset:0;display:grid;place-items:center;font-size:65px;color:#ffe9ef;text-shadow:0 0 30px #ff8eac}
+@keyframes breathe{50%{transform:scale(1.06);box-shadow:0 0 90px rgba(237,139,169,.36)}}
+
+.envelope{width:min(300px,72vw);height:190px;position:relative;cursor:pointer;margin:5px auto 20px;
+ border-radius:18px;background:linear-gradient(145deg,#a94b69,#64233e);box-shadow:0 25px 70px rgba(0,0,0,.45);
+ border:1px solid rgba(255,220,225,.25);display:grid;place-items:center;transition:.4s}
+.envelope:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 49%,rgba(255,255,255,.16) 50%,transparent 51%),linear-gradient(45deg,transparent 49%,rgba(255,255,255,.11) 50%,transparent 51%);border-radius:18px}
+.envelope span{font-size:64px;z-index:2;filter:drop-shadow(0 6px 15px rgba(0,0,0,.35))}
+.envelope.open{transform:rotateX(18deg) scale(1.05);filter:brightness(1.15)}
+.reveal{max-width:720px;margin:0 auto;max-height:42vh;overflow:auto;padding:24px;border-radius:26px}
+.reveal p{font-size:clamp(20px,4vw,30px);line-height:1.5}
+
+.cake-stage{position:relative;height:min(37vh,330px);display:grid;place-items:center}
+.cake{position:relative;width:min(280px,66vw);height:150px;margin-top:85px}
+.layer{position:absolute;left:0;right:0;margin:auto;border-radius:18px 18px 12px 12px;background:linear-gradient(#ffceda,#b85070);
+ box-shadow:0 14px 35px rgba(0,0,0,.3)}
+.layer.a{width:100%;height:65px;bottom:0}.layer.b{width:84%;height:55px;bottom:48px}.layer.c{width:66%;height:48px;bottom:88px}
+.candle{position:absolute;bottom:129px;left:50%;width:10px;height:66px;background:linear-gradient(90deg,#f7d99b,#fff2c9,#d5a965);transform:translateX(-50%);border-radius:8px}
+.flame{position:absolute;left:50%;bottom:190px;width:25px;height:38px;transform:translateX(-50%) rotate(45deg);border-radius:70% 0 70% 70%;
+ background:linear-gradient(135deg,#fff7bd,#ff9e52 65%,#e04e66);box-shadow:0 0 35px #ffc36e;animation:flame 1s ease-in-out infinite alternate}
+@keyframes flame{to{transform:translateX(-50%) rotate(45deg) scale(.82);filter:brightness(1.25)}}
+.candle.out .flame{display:none}.candle.out{animation:snuff .35s ease}
+@keyframes snuff{50%{transform:translateX(-50%) scaleY(.4)}}
+.firework{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 18px var(--gold);animation:burst 1.1s ease-out forwards}
+@keyframes burst{0%{transform:scale(.2);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.5);opacity:0}}
+
+.story-card{min-height:310px;width:min(680px,92vw);margin:auto;display:grid;grid-template-columns:minmax(160px,38%) 1fr;
+ gap:24px;align-items:center;padding:18px;border-radius:28px;transform:rotate(-1deg);transition:.6s}
+.story-card img{width:100%;height:330px;object-fit:cover;border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.story-copy{text-align:left}.story-copy p{font-size:clamp(18px,3vw,24px);line-height:1.65}
+@media(max-width:620px){.story-card{grid-template-columns:1fr;max-height:72vh;overflow:auto}.story-card img{height:245px}.story-copy{text-align:center}}
+
+.memory-universe{position:relative;width:min(900px,96vw);height:min(67vh,650px);margin:auto;perspective:900px}
+.memory{position:absolute;width:clamp(110px,19vw,170px);padding:8px 8px 24px;background:#fff7ee;color:#4b3940;
+ box-shadow:0 20px 55px rgba(0,0,0,.48);cursor:pointer;transform:translate(-50%,-50%) rotate(var(--r)) translateZ(var(--z));
+ transition:.45s;animation:floatMem 6s ease-in-out infinite}
+.memory:nth-child(2n){animation-delay:-2s}.memory:nth-child(3n){animation-delay:-4s}
+.m9{left:8%;top:48%}.m10{left:58%;top:17%}.m11{left:94%;top:45%}.m12{left:8%;top:82%}.m13{left:65%;top:88%}.m14{left:91%;top:82%}
+.memory:hover{transform:translate(-50%,-50%) rotate(0) scale(1.08) translateZ(100px);z-index:20}
+.memory img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block}.memory small{display:block;padding-top:6px;font:600 14px/1.1 cursive}
+@keyframes floatMem{50%{margin-top:-9px}}
+.m1{left:15%;top:30%}.m2{left:38%;top:20%}.m3{left:64%;top:31%}.m4{left:84%;top:22%}.m5{left:25%;top:69%}.m6{left:52%;top:76%}.m7{left:77%;top:67%}.m8{left:49%;top:43%}
+@media(max-width:600px){.m1{left:15%;top:30%}.m2{left:50%;top:20%}.m3{left:84%;top:30%}.m4{left:25%;top:52%}.m5{left:60%;top:53%}.m6{left:86%;top:62%}.m7{left:37%;top:77%}.m8{left:66%;top:79%}}
+.memory-modal{position:fixed;inset:0;z-index:80;background:rgba(4,3,8,.74);backdrop-filter:blur(18px);display:none;place-items:center;padding:25px}
+.memory-modal.show{display:grid}.modal-inner{width:min(520px,90vw);padding:14px;border-radius:26px;background:rgba(255,248,242,.97);color:#4b3940;transform:scale(.92);animation:pop .4s forwards}
+@keyframes pop{to{transform:scale(1)}}.modal-inner img{width:100%;max-height:60vh;object-fit:cover;border-radius:18px}.modal-caption{font:600 24px/1.25 cursive;padding:14px 8px 5px}
+
+.sunflower-field{position:relative;width:min(900px,96vw);height:min(54vh,500px);margin:auto;flex:0 0 auto}
+.flower{position:absolute;width:64px;height:64px;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 0 11px rgba(246,213,138,.28));transition:.3s}
+.flower:hover{transform:scale(1.16)}.flower:after{content:"🌻";font-size:45px}
+.flower.opened{filter:grayscale(.65) opacity(.6);transform:scale(.9)}
+.flower.opened:after{content:"✨";font-size:30px}
+.reason-pop{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);width:min(420px,84vw);padding:24px 22px;border-radius:25px;
+ background:rgba(18,10,21,.93);border:1px solid rgba(246,213,138,.28);box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.35s;z-index:30}
+.reason-pop.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+.reason-pop p{font-size:clamp(19px,4vw,27px);line-height:1.45}.flower-count{font:12px Arial,sans-serif;letter-spacing:.14em;color:#bdaab3;margin-top:5px}
+@media(max-width:600px){.flower{width:49px;height:49px}.flower:after{font-size:34px}}
+
+.open-when{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:780px;margin:25px auto}
+.when{width:clamp(135px,26vw,190px);min-height:110px;border-radius:22px;border:1px solid rgba(255,190,205,.16);
+ background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025));color:#fceff2;cursor:pointer;
+ display:grid;place-items:center;padding:18px;box-shadow:0 14px 40px rgba(0,0,0,.2);transition:.35s}
+.when:hover{transform:translateY(-5px) rotate(-1deg);border-color:rgba(246,213,138,.35)}
+.when span{font-size:32px}.when b{font-size:15px;font-weight:500;line-height:1.25}
+.letter-modal{position:fixed;inset:0;z-index:90;display:none;place-items:center;padding:22px;background:rgba(5,3,9,.72);backdrop-filter:blur(15px)}
+.letter-modal.show{display:grid}.letter{width:min(580px,92vw);max-height:78vh;overflow:auto;padding:30px 26px;border-radius:24px;
+ background:linear-gradient(145deg,#fff6ec,#f5dce0);color:#4a2d39;box-shadow:0 25px 90px rgba(0,0,0,.6);text-align:left}
+.letter h3{font-size:28px}.letter p{font-size:18px;line-height:1.65;color:#5d414a}.close{float:right;border:0;background:transparent;color:#7c5260;font-size:26px;cursor:pointer}
+
+.route{width:min(760px,90vw);height:230px;position:relative;margin:10px auto 20px}
+.map-line{position:absolute;left:10%;right:10%;top:52%;height:2px;background:linear-gradient(90deg,#ff6f94,#f6d58a);box-shadow:0 0 16px rgba(246,213,138,.5);transform:rotate(-8deg)}
+.plane{position:absolute;left:11%;top:46%;font-size:28px;animation:fly 4s ease-in-out infinite}
+@keyframes fly{50%{left:78%;top:30%;transform:rotate(-7deg)}100%{left:88%;top:47%;transform:rotate(0)}}
+.country{position:absolute;top:35%;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#d9c2c9}.india{left:3%}.germany{right:0}
+.country .flag{display:block;font-size:45px;margin-bottom:8px}.pin{position:absolute;width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 18px #fff;top:52%}.pin.i{left:10%}.pin.g{right:10%}
+
+.future-orbit{position:relative;width:min(850px,94vw);height:min(55vh,500px);margin:auto}
+.future-item{position:absolute;width:135px;height:135px;border-radius:50%;display:grid;place-items:center;padding:16px;text-align:center;
+ border:1px solid rgba(246,213,138,.2);background:radial-gradient(circle,rgba(255,155,185,.16),rgba(255,255,255,.03));
+ box-shadow:0 0 45px rgba(255,145,177,.08);font-size:16px;animation:orbitFloat 5s ease-in-out infinite}
+.future-item span{display:block;font-size:38px;margin-bottom:6px}.fi1{left:5%;top:20%}.fi2{left:28%;top:5%;animation-delay:-1s}.fi3{right:7%;top:18%;animation-delay:-2s}.fi4{left:14%;bottom:0;animation-delay:-3s}.fi5{right:30%;bottom:2%;animation-delay:-4s}.fi6{right:2%;bottom:3%;animation-delay:-1.5s}
+@keyframes orbitFloat{50%{transform:translateY(-12px) scale(1.03)}}
+.future-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:50%;
+ display:grid;place-items:center;background:radial-gradient(circle,#ffd8e3,#b64e70 40%,transparent 70%);font-size:50px;filter:drop-shadow(0 0 35px rgba(255,137,171,.35))}
+
+#final-heart{width:160px;height:145px;position:relative;margin:10px auto 28px;cursor:pointer;animation:heartBeat 1.5s ease-in-out infinite}
+#final-heart:before,#final-heart:after{content:"";position:absolute;top:0;width:85px;height:130px;border-radius:80px 80px 0 0;background:linear-gradient(180deg,#ffb0c6,#b84469);box-shadow:0 0 35px rgba(255,112,151,.4)}
+#final-heart:before{left:80px;transform:rotate(45deg);transform-origin:0 100%}
+#final-heart:after{left:0;transform:rotate(-45deg);transform-origin:100% 100%}
+#final-heart span{position:relative;z-index:2;display:block;padding-top:54px;font-size:25px;color:#fff}
+@keyframes heartBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.08)}30%{transform:scale(1)}45%{transform:scale(1.04)}}
+.final-letter{width:min(700px,92vw);max-height:70vh;overflow:auto;margin:auto;padding:28px 26px;border-radius:26px;background:linear-gradient(145deg,#fff8ef,#f6dfe4);
+ color:#4a2e3a;text-align:left;box-shadow:0 30px 100px rgba(0,0,0,.65);display:none}
+.final-letter.show{display:block;animation:letterIn .9s cubic-bezier(.2,.8,.2,1)}
+@keyframes letterIn{from{opacity:0;transform:translateY(35px) scale(.97)}to{opacity:1;transform:none}}
+.final-letter p{font-size:clamp(17px,3vw,20px);line-height:1.72;color:#5d414b}
+.date{font-size:clamp(45px,11vw,90px);letter-spacing:.06em;color:var(--gold);text-shadow:0 0 35px rgba(246,213,138,.25)}
+.fade-curtain{position:fixed;inset:0;background:#05030a;z-index:120;opacity:0;pointer-events:none;transition:opacity .6s}
+.fade-curtain.on{opacity:1}
+
+#micStatus{font:11px Arial,sans-serif;color:#9e8992;margin-top:8px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+@media (max-height:760px){
+  .scene{padding-top:56px;padding-bottom:34px}
+  #intro-orb{width:min(190px,42vw)}
+  #intro-orb:after{font-size:50px}
+  .eyebrow{margin-bottom:8px}
+  h1{font-size:clamp(40px,8vw,76px)}
+  .lead{font-size:clamp(15px,2.5vw,20px);line-height:1.42}
+  .stack{gap:12px}
+  .cta{padding:13px 21px}
+}
+@media (max-width:620px) and (max-height:850px){
+  .scene{padding-top:58px;padding-bottom:38px}
+  #intro-orb{width:170px}
+  h1{font-size:clamp(38px,12vw,58px)}
+  .lead{font-size:16px;line-height:1.38}
+  .stack{gap:11px}
+  #hint{bottom:8px;font-size:9px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="ambient"></div>
+  <div id="scene-layer">
+
+    <section class="scene active" data-scene="1">
+      <div class="content stack">
+        <div id="intro-orb" aria-hidden="true"></div>
+        <div class="eyebrow">a tiny universe made just for you</div>
+        <h1>Hey birthday boy… <span class="pink">♥</span></h1>
+        <p class="lead">I made something only for you.<br><br>
+          <span class="muted">Put on your headphones.<br>Turn the volume up.<br>And promise me you'll stay until the very end.</span>
+        </p>
+        <button class="cta primary" id="startBtn">START OUR SURPRISE ✨</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="2">
+      <div class="content stack">
+        <div class="eyebrow">01 · naughty secret 😏</div>
+        <h2>Before I wish you<br><span class="gold">Happy Birthday…</span></h2>
+        <p class="lead">I have one little secret.</p>
+        <button class="envelope" id="secretEnvelope" aria-label="Open secret envelope"><span>💌</span></button>
+        <div class="reveal glass hidden" id="secretReveal">
+          <p>Okay… don't blush 🙈<br>I still get butterflies thinking about you…<br>
+          and some of my thoughts about you definitely aren't innocent. 😏❤️</p>
+          <button class="cta" data-next>Okay baby… continue ❤️</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="3">
+      <div class="content stack">
+        <div class="eyebrow">02 · make a wish 🎂</div>
+        <h2>Close your eyes for<br><span class="gold">3 seconds.</span></h2>
+        <p class="lead">Make a wish.<br>Then blow out your candle.</p>
+        <div class="cake-stage">
+          <div class="cake" aria-hidden="true">
+            <div class="layer a"></div><div class="layer b"></div><div class="layer c"></div>
+            <div class="candle" id="candle"></div><div class="flame" id="flame"></div>
+          </div>
+        </div>
+        <button class="cta primary" id="blowBtn">🕯️ Blow out my candle</button>
+        <button class="cta small" id="micBtn">Use microphone (optional)</button>
+        <div id="micStatus">Tap the candle button if your browser doesn't allow microphone access.</div>
+        <div class="hidden" id="wishDone">
+          <p class="script">Wish made? ❤️</p><p class="lead">I hope it comes true.</p>
+          <button class="cta" data-next>Keep going, birthday boy ✨</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="4">
+      <div class="content stack">
+        <div class="eyebrow">03 · your birthday letter</div>
+        <h2 id="typingTitle"></h2>
+        <p class="lead" id="reveal4a"></p>
+        <p class="lead gold" id="reveal4b"></p>
+        <button class="cta hidden" id="toStory" data-next>Open our story 📖</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="5">
+      <div class="content stack">
+        <div class="eyebrow">04 · our story</div>
+        <div class="story-card glass" id="storyCard">
+          <img id="storyImg" src="assets/memory-01.webp" alt="Our memory">
+          <div class="story-copy">
+            <div class="script" id="storyCaption">the first little piece of our story…</div>
+            <p id="storyText">Somewhere between conversations, laughter, waiting, missing you, and dreaming about tomorrow… you became part of my everyday life.</p>
+            <button class="cta" id="nextMemory">Tap for the next memory ♥</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="6">
+      <div class="content stack">
+        <div class="eyebrow">05 · memory universe</div>
+        <h2>Our little constellation <span class="gold">📸</span></h2>
+        <p class="lead">Touch a memory. Let it pull you a little closer.</p>
+        <div class="memory-universe" id="memoryUniverse"></div>
+        <button class="cta" data-next>There are 24 more reasons… 🌻</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="7">
+      <div class="content stack">
+        <div class="eyebrow">06 · 24 reasons 🌻</div>
+        <h2>Twenty-four little reasons<br><span class="gold">I love you.</span></h2>
+        <div class="flower-count"><span id="flowerCount">0</span> / 24 opened</div>
+        <div class="sunflower-field" id="sunflowerField"></div>
+        <div class="reason-pop" id="reasonPop">
+          <button class="close" id="closeReason">×</button>
+          <div class="eyebrow">reason <span id="reasonNumber"></span></div>
+          <p id="reasonText"></p>
+          <div class="flower-count">tap another sunflower when you're ready ♥</div>
+        </div>
+        <div class="hidden" id="allFlowers">
+          <p class="script">You found all 24…</p>
+          <p class="lead">but you haven't found my biggest secret yet. 👀</p>
+          <button class="cta" data-next>One more little door 💌</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="8">
+      <div class="content stack">
+        <div class="eyebrow">07 · open when 💌</div>
+        <h2>Little envelopes for<br><span class="gold">little moments.</span></h2>
+        <p class="lead">Open one whenever you need a tiny piece of me.</p>
+        <div class="open-when" id="openWhen"></div>
+        <button class="cta" data-next>Let's cross the distance ✈️</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="9">
+      <div class="content stack">
+        <div class="eyebrow">08 · india → germany</div>
+        <div class="route">
+          <div class="country india"><span class="flag">🇮🇳</span>India</div>
+          <div class="country germany"><span class="flag">🇩🇪</span>Germany</div>
+          <div class="map-line"></div><div class="pin i"></div><div class="pin g"></div><div class="plane">✈️</div>
+        </div>
+        <h2>Two countries.<br><span class="gold">One heart.</span><br>One story.</h2>
+        <p class="lead">Miles can separate two people.<br>They can't separate two hearts.</p>
+        <p class="script">One day we'll look back at this distance and say:<br>We made it.</p>
+        <button class="cta" data-next>Show me our future 🥹</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="10">
+      <div class="content stack">
+        <div class="eyebrow">09 · our future</div>
+        <h2>Our best chapter<br><span class="gold">hasn't happened yet.</span></h2>
+        <div class="future-orbit">
+          <div class="future-core">♥</div>
+          <div class="future-item fi1"><div><span>📸</span>First proper photo together</div></div>
+          <div class="future-item fi2"><div><span>☕</span>First ordinary date</div></div>
+          <div class="future-item fi3"><div><span>✈️</span>First trip together</div></div>
+          <div class="future-item fi4"><div><span>🎂</span>Birthday without a screen</div></div>
+          <div class="future-item fi5"><div><span>🌻</span>An ordinary day that becomes our favourite</div></div>
+          <div class="future-item fi6"><div><span>🏡</span>“We really made it.”</div></div>
+        </div>
+        <button class="cta" data-next>One final secret… 💍</button>
+      </div>
+    </section>
+
+    <section class="scene" data-scene="11">
+      <div class="content stack">
+        <div class="eyebrow">10 · the final secret</div>
+        <h2 id="finalPrompt">You really thought I was done?</h2>
+        <p class="lead" id="tapPrompt">Tap my heart.</p>
+        <div id="final-heart" role="button" tabindex="0" aria-label="Tap my heart"><span>♥</span></div>
+        <div class="final-letter" id="finalLetter">
+          <p><strong>Happy Birthday, my love. ❤️</strong></p>
+          <p>I couldn't give you a birthday hug from India today, so I made you this little universe instead.</p>
+          <p>You are not just someone I love. You're someone I want beside me for the ordinary things — the boring mornings, random laughs, stupid arguments, late-night talks, celebrations, and all the quiet days in between.</p>
+          <p>Germany may be where you are right now, but my heart has never cared about borders.</p>
+          <p>Happy Birthday, my cute Navru, my cute little baby, my everything… and my unofficial husband. ❤️</p>
+          <p>No matter how many kilometres are between us… I'm choosing you.<br>Again and again.</p>
+          <p>Your girl, always. 🌻❤️</p>
+        </div>
+        <div class="hidden" id="ending">
+          <div class="date">28 • 08 • 2026</div>
+          <p class="script">Made with all my love,<br>from India 🇮🇳 to Germany 🇩🇪</p>
+          <button class="cta primary" id="replay">Replay from the beginning ↻</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="hud">
+    <div id="progress"><i></i></div>
+    <button id="musicCtl" aria-label="Pause music"><span class="music-dot"></span><span id="musicIcon">♫</span><span id="musicText">Music</span></button>
+    <div id="hint">tap to explore · no scrolling needed</div>
+  </div>
+</div>
+
+<div class="memory-modal" id="memoryModal">
+  <div class="modal-inner">
+    <button class="close" id="closeMemory">×</button>
+    <img id="modalImg" src="" alt="Memory">
+    <div class="modal-caption" id="modalCaption"></div>
+  </div>
+</div>
+<div class="letter-modal" id="letterModal">
+  <div class="letter">
+    <button class="close" id="closeLetter">×</button>
+    <div class="eyebrow">for you, whenever you need it</div>
+    <h3 id="letterTitle"></h3>
+    <p id="letterText"></p>
+  </div>
+</div>
+<div class="fade-curtain" id="curtain"></div>
+
+<audio id="bgMusic" preload="auto" loop playsinline webkit-playsinline><source src="assets/song.mp3" type="audio/mpeg">Your browser does not support HTML5 audio.</audio>
+
+<script>
+(() => {
+  const photoFiles = ["photo-01.webp", "photo-02.webp", "photo-03.webp", "photo-04.webp", "photo-05.webp", "photo-06.webp", "photo-07.webp", "photo-08.webp", "photo-09.webp", "photo-10.webp", "photo-11.webp", "photo-12.webp", "photo-13.webp", "photo-14.webp", "photo-15.webp", "photo-16.webp", "photo-17.webp", "photo-18.webp", "photo-19.webp", "photo-20.webp", "photo-21.webp", "photo-22.webp", "photo-23.webp", "photo-24.webp", "photo-25.webp", "photo-26.webp", "photo-27.webp", "photo-28.webp", "photo-29.webp", "photo-30.webp", "photo-31.webp", "photo-32.webp", "photo-33.webp", "photo-34.webp", "photo-35.webp", "photo-36.webp", "photo-37.webp", "photo-38.webp", "photo-39.webp", "photo-40.webp", "photo-41.webp", "photo-42.webp", "photo-43.webp", "photo-44.webp", "photo-45.webp", "photo-46.webp", "photo-47.webp", "photo-48.webp", "photo-49.webp", "photo-50.webp"];
+  // Preload local photos progressively so transitions feel instant on phones.
+  photoFiles.forEach((file, i) => { const im = new Image(); im.src = "assets/" + file; });
+  const captions = [
+    "the first little piece of our story…","you, making ordinary moments feel soft",
+    "a memory I keep close","somewhere between then and now","my favourite kind of smile",
+    "distance, but never really apart","another little chapter of us","the moments worth remembering",
+    "a thousand tiny reasons to smile","my favourite person, again",
+    "the kind of memory that stays","one day we'll tell this story together",
+    "still choosing you","our story is still becoming","the next memory is waiting"
+  ];
+  const scenes = [...document.querySelectorAll(".scene")];
+  const progress = document.querySelector("#progress i");
+  const music = document.querySelector("#bgMusic");
+  const musicCtl = document.querySelector("#musicCtl");
+  const musicDot = document.querySelector(".music-dot");
+  const musicText = document.querySelector("#musicText");
+  const curtain = document.querySelector("#curtain");
+  let current = 0, audioStarted = false;
+
+  function setMusicUI() {
+    const on = !music.paused;
+    musicDot.classList.toggle("on", on);
+    musicText.textContent = on ? "Music on" : "Music";
+    musicCtl.setAttribute("aria-label", on ? "Pause music" : "Play music");
+  }
+  async function startMusic() {
+    try {
+      music.volume = 0.72;
+      await music.play();
+      audioStarted = true;
+    } catch(e) {}
+    setMusicUI();
+  }
+  musicCtl.addEventListener("click", async () => {
+    if (music.paused) await startMusic(); else music.pause();
+    setMusicUI();
+  });
+  music.addEventListener("play", setMusicUI);
+  music.addEventListener("pause", setMusicUI);
+  music.addEventListener("error", () => {
+    musicText.textContent = "Music unavailable";
+  });
+  music.addEventListener("loadedmetadata", setMusicUI);
+  music.addEventListener("canplay", setMusicUI);
+
+  // Do not autoplay on page load. Once the user has explicitly started the
+  // experience, recover from accidental browser pauses when possible.
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && audioStarted && music.paused) {
+      music.play().then(setMusicUI).catch(setMusicUI);
+    }
+  });
+
+  function go(n) {
+    if (n < 0 || n >= scenes.length || n === current) return;
+    curtain.classList.add("on");
+    setTimeout(() => {
+      scenes[current].classList.remove("active");
+      scenes[current].classList.add("exit");
+      scenes[n].classList.add("active");
+      setTimeout(() => scenes[current].classList.remove("exit"), 800);
+      current = n;
+      progress.style.width = ((current)/(scenes.length-1)*100) + "%";
+      curtain.classList.remove("on");
+      onScene(n);
+    }, 420);
+  }
+  function next(){go(current+1)}
+  document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click",next));
+
+  // Ambient stars + occasional hearts/petals.
+  const ambient = document.querySelector("#ambient");
+  for(let i=0;i<70;i++){
+    const s=document.createElement("i"); s.className="star";
+    s.style.left=Math.random()*100+"%"; s.style.top=Math.random()*100+"%";
+    s.style.setProperty("--d",(2+Math.random()*5)+"s"); s.style.animationDelay=(-Math.random()*5)+"s";
+    ambient.appendChild(s);
+  }
+  function floatSymbol(type) {
+    const e=document.createElement("div");
+    e.className=type==="petal"?"petal":"heart-float";
+    e.textContent=type==="petal"?"🌻":"♥";
+    e.style.left=(Math.random()*100)+"%"; e.style.bottom="-30px";
+    e.style.setProperty("--x",(Math.random()*180-90)+"px");
+    e.style.setProperty("--d",(5+Math.random()*6)+"s");
+    ambient.appendChild(e); setTimeout(()=>e.remove(),12000);
+  }
+  setInterval(()=>floatSymbol(Math.random()<.38?"petal":"heart"),900);
+
+  // Scene 1: music begins only after deliberate tap.
+  document.querySelector("#startBtn").addEventListener("click", function(){
+    // The play() call is intentionally made synchronously inside the
+    // user's tap gesture. This is the most reliable mobile-browser pattern.
+    music.muted = false;
+    music.volume = 0.72;
+    const p = music.play();
+    audioStarted = true;
+    setMusicUI();
+    if (p && p.catch) p.catch(() => setMusicUI());
+    go(1);
+  });
+
+  // Scene 2 secret.
+  document.querySelector("#secretEnvelope").addEventListener("click",()=>{
+    const env=document.querySelector("#secretEnvelope"), rev=document.querySelector("#secretReveal");
+    env.classList.add("open"); rev.classList.remove("hidden");
+    env.style.marginBottom="2px";
+    burstHearts(18);
+  });
+
+  // Scene 3 candle.
+  let candleDone=false;
+  function extinguish(){
+    if(candleDone)return; candleDone=true;
+    document.querySelector("#candle").classList.add("out");
+    document.querySelector("#flame").style.display="none";
+    burstFireworks(32); burstHearts(24);
+    setTimeout(()=>{
+      document.querySelector("#wishDone").classList.remove("hidden");
+      document.querySelector("#blowBtn").classList.add("hidden");
+      document.querySelector("#micBtn").classList.add("hidden");
+      document.querySelector("#micStatus").classList.add("hidden");
+    },900);
+  }
+  document.querySelector("#blowBtn").addEventListener("click",extinguish);
+
+  // Optional microphone blow detection. It is intentionally a progressive enhancement;
+  // if the browser blocks getUserMedia, the reliable tap fallback remains available.
+  document.querySelector("#micBtn").addEventListener("click",async()=>{
+    const status=document.querySelector("#micStatus");
+    if(!navigator.mediaDevices?.getUserMedia){
+      status.textContent="Microphone detection isn't available here — use the candle button instead.";
+      return;
+    }
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      status.textContent="Listening… blow toward your microphone.";
+      const ctx=new (window.AudioContext||window.webkitAudioContext)();
+      const source=ctx.createMediaStreamSource(stream), analyser=ctx.createAnalyser();
+      analyser.fftSize=1024; source.connect(analyser);
+      const data=new Uint8Array(analyser.fftSize); let loud=0;
+      const check=()=>{
+        if(candleDone){stream.getTracks().forEach(t=>t.stop());ctx.close();return}
+        analyser.getByteTimeDomainData(data);
+        let sum=0; for(let i=0;i<data.length;i++){const v=(data[i]-128)/128;sum+=v*v}
+        const rms=Math.sqrt(sum/data.length);
+        if(rms>.12) loud++; else loud=Math.max(0,loud-1);
+        if(loud>5){extinguish();stream.getTracks().forEach(t=>t.stop());ctx.close();return}
+        requestAnimationFrame(check);
+      }; check();
+    }catch(e){
+      status.textContent="Mic access was unavailable. Tap “Blow out my candle” instead.";
+    }
+  });
+
+  function typeInto(el,text,delay=24){
+    el.textContent=""; let i=0;
+    const tick=()=>{el.textContent=text.slice(0,i++);if(i<=text.length)setTimeout(tick,delay)};tick();
+  }
+  function onScene(n){
+    if(n===3){
+      candleDone=false;
+      document.querySelector("#candle").classList.remove("out");
+      document.querySelector("#flame").style.display="";
+      document.querySelector("#wishDone").classList.add("hidden");
+      document.querySelector("#blowBtn").classList.remove("hidden");
+      document.querySelector("#micBtn").classList.remove("hidden");
+      document.querySelector("#micStatus").classList.remove("hidden");
+    }
+    if(n===4){
+      typeInto(document.querySelector("#typingTitle"),"Happiest Birthday to my everything,\nmy cute Navru,\nmy cute little baby,\nmy favourite person. ❤️",22);
+      setTimeout(()=>typeInto(document.querySelector("#reveal4a"),"I wish I could be beside you right now… stealing your cake, annoying you, hugging you way too tightly, and watching you smile.",16),1500);
+      setTimeout(()=>typeInto(document.querySelector("#reveal4b"),"Since I can't be there physically, I brought a little piece of my heart to Germany.",16),3200);
+      setTimeout(()=>document.querySelector("#toStory").classList.remove("hidden"),5000);
+    }
+  }
+
+  // Scene 5 story: one photo at a time, not a gallery.
+  let storyIndex=0;
+  function renderStory(){
+    document.querySelector("#storyImg").src="assets/"+photoFiles[storyIndex];
+    document.querySelector("#storyCaption").textContent=captions[storyIndex % captions.length] || ("another little chapter of us…");
+    document.querySelector("#storyText").textContent = storyIndex===0
+      ? "Somewhere between conversations, laughter, waiting, missing you, and dreaming about tomorrow… you became part of my everyday life."
+      : ["A little moment. A little smile. A little more of you becoming part of me.",
+         "Some memories don't need a perfect beginning — they just need two people who keep choosing each other.",
+         "Even across distance, you somehow found your way into my everyday life.",
+         "If I could, I'd pause this moment and keep it in my pocket forever.",
+         "Our story is made of tiny things… and somehow the tiny things became everything.",
+         "This is the part where I smile at my phone like an idiot. Again.",
+         "There is still so much story left for us to write.",
+         "One day, these screens will become memories of the time we waited.",
+         "I hope we collect a lifetime of these little moments.",
+         "You became my favourite notification, favourite conversation, favourite person.",
+         "Somewhere along the way, missing you became proof of how much I love you.",
+         "This chapter isn't the ending. It's the middle.",
+         "I would choose this story again.",
+         "And I still believe our best memories are ahead."
+        ][Math.min(storyIndex-1,13)];
+  }
+  document.querySelector("#nextMemory").addEventListener("click",()=>{
+    if(storyIndex<photoFiles.length-1){storyIndex++;renderStory();document.querySelector("#storyCard").animate([{transform:"translateX(35px) rotate(2deg)",opacity:.3},{transform:"translateX(0) rotate(-1deg)",opacity:1}],{duration:600,easing:"cubic-bezier(.2,.8,.2,1)"})}
+    else next();
+  });
+  renderStory();
+
+  // Scene 6 constellation.
+  const universe=document.querySelector("#memoryUniverse");
+  const positions=["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10","m11","m12","m13","m14"];
+  photoFiles.slice(0,14).forEach((file,i)=>{
+    const m=document.createElement("div"); m.className="memory "+positions[i];
+    m.style.setProperty("--r",(Math.random()*10-5)+"deg");m.style.setProperty("--z",(Math.random()*80)+"px");
+    m.innerHTML=`<img src="assets/${file}" alt="Memory ${i+1}"><small>${captions[i]}</small>`;
+    m.addEventListener("click",()=>openMemory(i)); universe.appendChild(m);
+  });
+  function openMemory(i){
+    document.querySelector("#modalImg").src="assets/"+photoFiles[i];
+    document.querySelector("#modalCaption").textContent=captions[i % captions.length] || ("a little memory of us ♥");
+    document.querySelector("#memoryModal").classList.add("show");burstHearts(12);
+  }
+  document.querySelector("#closeMemory").addEventListener("click",()=>document.querySelector("#memoryModal").classList.remove("show"));
+  document.querySelector("#memoryModal").addEventListener("click",e=>{if(e.target.id==="memoryModal")e.currentTarget.classList.remove("show")});
+
+  // Scene 7: 24 sunflowers.
+  const reasons=[
+    "Because your smile makes my heart feel lighter.","Because distance never changed what I feel.",
+    "Because I love your cute little side.","Because you make ordinary conversations special.",
+    "Because I can be myself with you.","Because your voice feels like home.",
+    "Because you make me believe in our future.","Because you care in the little ways.",
+    "Because you make me laugh.","Because I notice the tiny things about you.",
+    "Because you make this distance worth fighting through.","Because I'm proud of you.",
+    "Because my heart keeps choosing you.","Because I love our memories.",
+    "Because our best memories are still ahead.","Because you became my favourite person.",
+    "Because I miss you in the sweetest way.","Because you make me dream bigger.",
+    "Because you feel like my safe place.","Because I can imagine ordinary days with you.",
+    "Because I want many more birthdays with you.","Because I still choose you.",
+    "Because you're simply you.","Because you're my favourite reason. 🌻"
+  ];
+  const field=document.querySelector("#sunflowerField");
+  let opened=0;
+  // Deliberately organic positions; avoids the “grid of sections” feeling.
+  const coords=[[10,18],[25,8],[42,15],[59,7],[78,17],[91,31],[12,43],[31,31],[49,34],[69,30],[86,48],[5,68],
+    [22,55],[39,52],[57,55],[75,60],[92,70],[14,86],[32,76],[49,85],[66,78],[82,88],[93,61],[52,68]];
+  reasons.forEach((reason,i)=>{
+    const b=document.createElement("button");b.className="flower";b.style.left=coords[i][0]+"%";b.style.top=coords[i][1]+"%";
+    b.setAttribute("aria-label","Reason "+(i+1));b.dataset.i=i;
+    b.addEventListener("click",()=>{
+      if(!b.classList.contains("opened")){b.classList.add("opened");opened++;document.querySelector("#flowerCount").textContent=opened}
+      document.querySelector("#reasonNumber").textContent=i+1;document.querySelector("#reasonText").textContent=reason;
+      document.querySelector("#reasonPop").classList.add("show");burstHearts(7);
+      if(opened===24) setTimeout(()=>document.querySelector("#allFlowers").classList.remove("hidden"),700);
+    });field.appendChild(b);
+  });
+  document.querySelector("#closeReason").addEventListener("click",()=>document.querySelector("#reasonPop").classList.remove("show"));
+
+  // Scene 8 open-when.
+  const notes=[
+    ["Open when you miss me","💌","Close your eyes. Imagine my arms around you. Distance is only geography; you are still my person."],
+    ["Open when you're sad","🌙","You don't have to be okay every minute. Take a breath, be gentle with yourself, and remember I'm always on your side."],
+    ["Open when you need a hug","🫂","This is your emergency invisible hug. Very tight. No escaping. ♥"],
+    ["Open when you doubt yourself","✨","Look at how far you've come. I believe in you on the days you forget how incredible you are."],
+    ["Open when you're tired","☕","Rest, baby. The world can wait. You don't have to earn rest. You deserve soft days too."],
+    ["Open when you feel lonely","🌻","Look at the sky. Somewhere under this same sky is your girl, loving you and choosing you."],
+  ];
+  const ow=document.querySelector("#openWhen");
+  notes.forEach(([title,icon,msg])=>{
+    const b=document.createElement("button");b.className="when";b.innerHTML=`<span>${icon}</span><b>${title}</b>`;
+    b.addEventListener("click",()=>{document.querySelector("#letterTitle").textContent=title;document.querySelector("#letterText").textContent=msg;document.querySelector("#letterModal").classList.add("show")});
+    ow.appendChild(b);
+  });
+  document.querySelector("#closeLetter").addEventListener("click",()=>document.querySelector("#letterModal").classList.remove("show"));
+  document.querySelector("#letterModal").addEventListener("click",e=>{if(e.target.id==="letterModal")e.currentTarget.classList.remove("show")});
+
+  // Final heart.
+  document.querySelector("#final-heart").addEventListener("click",()=>{
+    document.querySelector("#finalPrompt").textContent="There you are… ♥";
+    document.querySelector("#tapPrompt").textContent="My biggest secret was always you.";
+    document.querySelector("#final-heart").style.display="none";
+    document.querySelector("#finalLetter").classList.add("show");
+    burstFireworks(55); for(let i=0;i<45;i++)setTimeout(()=>floatSymbol(i%3===0?"petal":"heart"),i*70);
+    setTimeout(()=>document.querySelector("#ending").classList.remove("hidden"),2500);
+  });
+  document.querySelector("#final-heart").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")document.querySelector("#final-heart").click()});
+
+  document.querySelector("#replay").addEventListener("click",()=>{
+    curtain.classList.add("on");
+    setTimeout(()=>{
+      current=0; scenes.forEach(s=>s.classList.remove("active","exit"));scenes[0].classList.add("active");
+      progress.style.width="0%"; document.querySelector("#finalLetter").classList.remove("show");
+      document.querySelector("#ending").classList.add("hidden");document.querySelector("#final-heart").style.display="";
+      document.querySelector("#finalPrompt").textContent="You really thought I was done?";
+      document.querySelector("#tapPrompt").textContent="Tap my heart.";
+      music.pause(); music.currentTime=0; audioStarted=false; setMusicUI(); candleDone=false; setMusicUI(); curtain.classList.remove("on");
+    },550);
+  });
+
+  function burstHearts(count){
+    for(let i=0;i<count;i++)setTimeout(()=>floatSymbol("heart"),i*45);
+  }
+  function burstFireworks(count){
+    const layer=document.querySelector("#ambient");
+    for(let i=0;i<count;i++){
+      const f=document.createElement("i");f.className="firework";
+      f.style.left=(20+Math.random()*60)+"%";f.style.top=(20+Math.random()*45)+"%";
+      f.style.setProperty("--dx",(Math.random()*300-150)+"px");f.style.setProperty("--dy",(Math.random()*260-130)+"px");
+      layer.appendChild(f);setTimeout(()=>f.remove(),1200);
+    }
+  }
+
+  // Gentle keyboard support for desktop without turning the app into a scrolling site.
+  window.addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight"||e.key==="Enter"){ if(document.activeElement.tagName!=="BUTTON")next(); }
+    if(e.key==="ArrowLeft")go(current-1);
+    if(e.key==="Escape"){
+      document.querySelector("#memoryModal").classList.remove("show");
+      document.querySelector("#letterModal").classList.remove("show");
+      document.querySelector("#reasonPop").classList.remove("show");
+    }
+  });
+  progress.style.width="0%";
+})();
+</script>
+</body>
+</html>
