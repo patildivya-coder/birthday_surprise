@@ -274,6 +274,39 @@ h3{font-size:clamp(25px,5vw,43px);font-weight:500}
     display: block;
   }
 }
+  /* FINAL HEART - mobile safe */
+#final-heart {
+  width: min(70vw, 320px);
+  height: min(70vw, 320px);
+  margin: 30px auto 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: visible !important;
+  transform: none;
+}
+
+#final-heart span {
+  display: block;
+  font-size: min(62vw, 280px);
+  line-height: 1;
+  transform: none;
+  overflow: visible;
+  filter: drop-shadow(0 0 18px rgba(255,120,170,.55));
+}
+@media (max-width: 600px) {
+  #final-heart {
+    width: 250px;
+    height: 250px;
+    margin: 25px auto 15px;
+  }
+
+  #final-heart span {
+    font-size: 220px;
+  }
+}
 </style>
 </head>
 <body>
